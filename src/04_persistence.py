@@ -24,7 +24,7 @@ r, m = r[rows], m[rows]
 lagged = {k: (close.pct_change() * 100).shift(k)[rows] for k in (1, 2, 3)}
 n = len(r)
 agree = np.sign(r) * np.sign(m)                  # +1 continue, -1 reverse
-rng = f"{r.index[0]:%Y-%m-%d} 至 {r.index[-1]:%Y-%m-%d}，共 {n} 周"
+rng = f"{r.index[0]:%Y-%m-%d} to {r.index[-1]:%Y-%m-%d}, {n} weeks"
 
 tbl = pd.DataFrame(index=close.columns)
 for k in (1, 2, 3):
@@ -37,13 +37,13 @@ tbl = tbl.sort_values("weighted", ascending=False)
 tbl.round(3).to_csv(RES / "tech20_persistence_table.csv")
 order = tbl.index.tolist()
 
-plt.rcParams["font.family"] = ["Microsoft YaHei", "Segoe UI", "sans-serif"]
+plt.rcParams["font.family"] = ["Segoe UI", "DejaVu Sans", "sans-serif"]
 INK, INK2, MUTED, SURF = "#0b0b0b", "#52514e", "#898781", "#fcfcfb"
 div = LinearSegmentedColormap.from_list(
     "div", ["#a8322f", "#e34948", "#f0a5a0", "#f0efec", "#86b6ef", "#2a78d6", "#104281"])
 norm = TwoSlopeNorm(vcenter=0, vmin=-0.6, vmax=0.6)
-FOOT = ("数据：Yahoo Finance（yfinance，复权收盘价，周线）；* = 统计显著（p < 0.05）："
-        f"方向一致性用二项检验，Pearson 用 t 检验；样本 {n} 周，|值| 小于约 0.3 基本可视为噪音")
+FOOT = ("Data: Yahoo Finance (yfinance), adjusted weekly closes; * = significant (p < 0.05): binomial test for "
+        f"direction agreement, t-test for Pearson; {n} weeks, so |value| below ~0.3 is mostly noise")
 
 
 def fmt(v):
@@ -51,8 +51,8 @@ def fmt(v):
 
 
 # 1) the table
-cols = [("lag1", "上 1 周"), ("lag2", "上 2 周"), ("lag3", "上 3 周"),
-        ("weighted", "加权 4:2:1\n（主指标）"), ("pearson", "Pearson 相关\n（本周 vs 加权均值）")]
+cols = [("lag1", "1 week\nback"), ("lag2", "2 weeks\nback"), ("lag3", "3 weeks\nback"),
+        ("weighted", "Weighted 4:2:1\n(main metric)"), ("pearson", "Pearson r\n(this week vs\nweighted mean)")]
 xpos = [0, 1, 2, 3.25, 4.5]                      # small gaps set the main metric and Pearson apart
 avg = tbl[[c for c, _ in cols]].mean()
 k = len(order)
@@ -72,23 +72,24 @@ for (c, _), x in zip(cols, xpos):
 ax.set_xlim(-0.6, xpos[-1] + 0.6)
 ax.set_ylim(k + 0.9, -0.6)
 ax.set_yticks(list(range(k)) + [k + 0.35])
-ax.set_yticklabels(order + ["20 只平均"], fontsize=9.5, color=INK2)
+ax.set_yticklabels(order + ["Average of 20"], fontsize=9.5, color=INK2)
 ax.set_xticks(xpos)
 ax.set_xticklabels([h for _, h in cols], fontsize=9, color=INK2)
 ax.xaxis.tick_top()
 ax.tick_params(length=0)
 for s in ax.spines.values():
     s.set_visible(False)
-ax.text(1, -1.75, "方向一致性：本周涨跌方向 vs 该周之前的方向（同向 +1，反向 −1，取平均）",
+ax.text(1, -1.75, "Direction agreement with an earlier week (+1 same, −1 opposite, averaged)",
         ha="center", va="center", fontsize=8.5, color=MUTED)
 ax.plot([-0.45, 2.45], [-1.45, -1.45], color="#c3c2b7", lw=0.8, clip_on=False)
 cax = fig.add_axes([0.9, 0.3, 0.014, 0.4])
 cb = fig.colorbar(plt.cm.ScalarMappable(cmap=div, norm=norm), cax=cax, extend="both")
 cb.ax.tick_params(labelsize=8, colors=INK2)
 cb.outline.set_visible(False)
-cb.set_label("蓝 = 趋势延续　红 = 趋势反转", color=INK2)
-fig.text(0.04, 0.965, "20 家科技股趋势延续性：本周 vs 前 3 周加权", fontsize=16, color=INK, weight="bold")
-fig.text(0.04, 0.943, f"{rng}；前 3 周权重按指数递减 4:2:1（越近越重）；按加权方向一致性从高到低排序",
+cax.text(0.5, 1.07, "Continues", transform=cax.transAxes, ha="center", va="bottom", fontsize=8.5, color=INK2)
+cax.text(0.5, -0.07, "Reverses", transform=cax.transAxes, ha="center", va="top", fontsize=8.5, color=INK2)
+fig.text(0.04, 0.965, "Trend Persistence: This Week vs the Weighted Previous 3 Weeks", fontsize=16, color=INK, weight="bold")
+fig.text(0.04, 0.943, f"{rng}; previous 3 weeks weighted 4:2:1 (more recent = heavier); sorted by weighted agreement, high to low",
          fontsize=9.5, color=INK2)
 fig.text(0.04, 0.025, FOOT, fontsize=7.5, color=MUTED, wrap=True)
 fig.savefig(FIG / "tech20_persistence_table.png", facecolor=SURF)
@@ -111,14 +112,14 @@ ax.set_ylim(k - 0.5, -0.5)
 ax.tick_params(length=0)
 for s in ax.spines.values():
     s.set_visible(False)
-ax.legend(handles=[Patch(color="#2a78d6", label="延续：本周方向 = 前 3 周加权方向"),
-                   Patch(color="#e34948", label="反转：本周方向 ≠ 前 3 周加权方向")],
+ax.legend(handles=[Patch(color="#2a78d6", label="Continue: this week's direction = weighted previous-3-week direction"),
+                   Patch(color="#e34948", label="Reverse: this week's direction ≠ weighted previous-3-week direction")],
           loc="upper left", bbox_to_anchor=(0, -0.06), ncol=2, frameon=False, fontsize=9,
           labelcolor=INK2)
-fig.text(0.04, 0.95, "20 家科技股逐周趋势延续 / 反转", fontsize=17, color=INK, weight="bold")
-fig.text(0.04, 0.915, f"{rng}；每格 = 该周的 +1 或 −1；股票名旁为全年平均（即表中“加权”列），自上而下从高到低",
+fig.text(0.04, 0.95, "Week-by-Week Trend Continuation / Reversal", fontsize=17, color=INK, weight="bold")
+fig.text(0.04, 0.915, f"{rng}; each cell = that week's +1 or −1; label = full-period average (the table's 'Weighted' column), sorted high to low",
          fontsize=10, color=INK2)
-fig.text(0.04, 0.02, "数据：Yahoo Finance（yfinance，复权收盘价，周线）；前 3 周权重 4:2:1",
+fig.text(0.04, 0.02, "Data: Yahoo Finance (yfinance), adjusted weekly closes; previous 3 weeks weighted 4:2:1",
          fontsize=8, color=MUTED)
 fig.savefig(FIG / "tech20_persistence_weekly.png", facecolor=SURF)
 plt.close(fig)

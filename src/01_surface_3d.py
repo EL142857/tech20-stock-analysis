@@ -32,7 +32,7 @@ else:
     close.to_csv(CACHE, float_format="%.4f")
 print(close.shape, close.index[0].date(), "->", close.index[-1].date())
 
-plt.rcParams["font.family"] = ["Microsoft YaHei", "Segoe UI", "sans-serif"]
+plt.rcParams["font.family"] = ["Segoe UI", "DejaVu Sans", "sans-serif"]
 INK, INK2, MUTED, SURF = "#0b0b0b", "#52514e", "#898781", "#fcfcfb"
 
 # diverging blue <-> red with gray midpoint (palette.md)
@@ -58,7 +58,7 @@ def plot(Z, order, cmap, norm, zlabel, title, subtitle, fname, cticks=None):
     ax.set_xticklabels([close.index[i].strftime("%Y-%m") for i in months], fontsize=8, color=INK2)
     ax.tick_params(axis="z", labelsize=8, colors=INK2)
     ax.tick_params(axis="y", pad=1)
-    ax.set_xlabel("周", color=INK2, labelpad=10)
+    ax.set_xlabel("Week", color=INK2, labelpad=10)
     ax.set_zlabel(zlabel, color=INK2, labelpad=10)
     for a in (ax.xaxis, ax.yaxis, ax.zaxis):
         a.set_pane_color((0.99, 0.99, 0.98, 1))
@@ -73,20 +73,20 @@ def plot(Z, order, cmap, norm, zlabel, title, subtitle, fname, cticks=None):
     cb.outline.set_visible(False)
     fig.text(0.04, 0.95, title, fontsize=17, color=INK, weight="bold")
     fig.text(0.04, 0.92, subtitle, fontsize=10, color=INK2)
-    fig.text(0.04, 0.02, "数据：Yahoo Finance（yfinance，复权收盘价，周线）", fontsize=8, color=MUTED)
+    fig.text(0.04, 0.02, "Data: Yahoo Finance (yfinance), adjusted weekly closes", fontsize=8, color=MUTED)
     fig.savefig(FIG / fname, facecolor=SURF)
     plt.close(fig)
 
 
-rng = f"{close.index[0]:%Y-%m-%d} 至 {close.index[-1]:%Y-%m-%d}，共 {len(close)} 周"
+rng = f"{close.index[0]:%Y-%m-%d} to {close.index[-1]:%Y-%m-%d}, {len(close)} weeks"
 
 # 1) normalized: first week = 100, stocks ordered by 1-year return
 idx = close / close.iloc[0] * 100
 order = idx.iloc[-1].sort_values().index.tolist()
 Z = idx[order].T.values
 plot(Z, order, div, TwoSlopeNorm(vcenter=100, vmin=Z.min(), vmax=Z.max()),
-     "指数（首周 = 100）", "20 家科技股一年周线走势（归一化）",
-     f"{rng}；按一年涨幅从低到高排列；蓝 = 高于首周，红 = 低于首周，浅灰 = 持平",
+     "Index (first week = 100)", "20 Tech Stocks: One Year of Weekly Closes (Normalized)",
+     f"{rng}; sorted by 1-year return, low to high; blue = above the first week, red = below, light gray = flat",
      "tech20_surface_normalized.png",
      cticks=[t for t in [50, 75, 100, 200, 300, 400, 500] if Z.min() <= t <= Z.max()])
 
@@ -94,7 +94,7 @@ plot(Z, order, div, TwoSlopeNorm(vcenter=100, vmin=Z.min(), vmax=Z.max()),
 order_p = close.iloc[-1].sort_values().index.tolist()
 Zp = close[order_p].T.values
 plot(Zp, order_p, seq, Normalize(Zp.min(), Zp.max()),
-     "股价（美元）", "20 家科技股一年周线股价（原始价格）",
-     f"{rng}；按最新股价从低到高排列", "tech20_surface_price.png")
+     "Price (USD)", "20 Tech Stocks: One Year of Weekly Closes (Raw Price)",
+     f"{rng}; sorted by latest price, low to high", "tech20_surface_price.png")
 
 print((idx.iloc[-1] - 100).sort_values(ascending=False).round(1).to_string())

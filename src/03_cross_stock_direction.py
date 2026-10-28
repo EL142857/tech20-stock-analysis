@@ -18,7 +18,7 @@ LAG = 3
 close = pd.read_csv(DATA / "tech20_weekly_close.csv", index_col=0, parse_dates=True)
 x = (close / close.rolling(LAG).mean().shift(1) - 1).dropna() * 100   # this week vs prior 3-week mean
 n_weeks = len(x)
-rng = f"{x.index[0]:%Y-%m-%d} 至 {x.index[-1]:%Y-%m-%d}，共 {n_weeks} 周"
+rng = f"{x.index[0]:%Y-%m-%d} to {x.index[-1]:%Y-%m-%d}, {n_weeks} weeks"
 
 # direction agreement: +1 if same sign that week, -1 if opposite, averaged over weeks
 sgn = np.sign(x.values)
@@ -32,12 +32,12 @@ S, R = S.loc[order, order], R.loc[order, order]
 S.round(3).to_csv(RES / "tech20_direction_agreement.csv")
 R.round(3).to_csv(RES / "tech20_pearson_corr.csv")
 
-plt.rcParams["font.family"] = ["Microsoft YaHei", "Segoe UI", "sans-serif"]
+plt.rcParams["font.family"] = ["Segoe UI", "DejaVu Sans", "sans-serif"]
 INK, INK2, MUTED, SURF, DIAG = "#0b0b0b", "#52514e", "#898781", "#fcfcfb", "#e1e0d9"
 div = LinearSegmentedColormap.from_list(
     "div", ["#a8322f", "#e34948", "#f0a5a0", "#f0efec", "#86b6ef", "#2a78d6", "#104281"])
 norm = TwoSlopeNorm(vcenter=0, vmin=-1, vmax=1)
-FOOT = ("数据：Yahoo Finance（yfinance，复权收盘价，周线）；信号 = 本周收盘 / 前3周平均收盘 − 1")
+FOOT = ("Data: Yahoo Finance (yfinance), adjusted weekly closes; signal = this week's close / average of the previous 3 closes − 1")
 
 
 def heatmap(M, title, subtitle, cblabel, fname):
@@ -78,12 +78,12 @@ def heatmap(M, title, subtitle, cblabel, fname):
     plt.close(fig)
 
 
-heatmap(S, "20 家科技股方向一致性矩阵",
-        f"{rng}；逐周比较两只股票的信号方向：同向 +1，反向 −1，取平均（= 同向周占比 × 2 − 1）",
-        "方向一致性（−1 ~ +1）", "tech20_direction_agreement_heatmap.png")
-heatmap(R, "20 家科技股相关系数矩阵（Pearson，对照）",
-        f"{rng}；与方向一致性用同一信号、同一排序，但同时考虑涨跌幅度",
-        "相关系数（−1 ~ +1）", "tech20_pearson_corr_heatmap.png")
+heatmap(S, "20 Tech Stocks: Direction Agreement Matrix",
+        f"{rng}; each week +1 if two stocks' signals point the same way, −1 if opposite, averaged (= 2 × share of same-direction weeks − 1)",
+        "Direction agreement (−1 to +1)", "tech20_direction_agreement_heatmap.png")
+heatmap(R, "20 Tech Stocks: Pearson Correlation Matrix (Comparison)",
+        f"{rng}; same signal and ordering as the direction-agreement matrix, but magnitude counts too",
+        "Correlation (−1 to +1)", "tech20_pearson_corr_heatmap.png")
 
 # 3D surface of the direction-agreement matrix
 k = len(order)
@@ -100,7 +100,7 @@ ax.set_yticks(range(k))
 ax.set_yticklabels(order, fontsize=7, color=INK2, ha="left")
 ax.tick_params(axis="z", labelsize=8, colors=INK2)
 ax.set_zlim(-1, 1)
-ax.set_zlabel("方向一致性", color=INK2, labelpad=8)
+ax.set_zlabel("Direction agreement", color=INK2, labelpad=8)
 for a in (ax.xaxis, ax.yaxis, ax.zaxis):
     a.set_pane_color((0.99, 0.99, 0.98, 1))
     a._axinfo["grid"].update(color="#e1e0d9", linewidth=0.6)
@@ -110,9 +110,9 @@ cax = fig.add_axes([0.9, 0.3, 0.012, 0.38])
 cb = fig.colorbar(plt.cm.ScalarMappable(cmap=div, norm=norm), cax=cax)
 cb.ax.tick_params(labelsize=8, colors=INK2)
 cb.outline.set_visible(False)
-cb.set_label("方向一致性（−1 ~ +1）", color=INK2)
-fig.text(0.04, 0.95, "20 家科技股方向一致性（三维曲面）", fontsize=17, color=INK, weight="bold")
-fig.text(0.04, 0.92, f"{rng}；同向 +1、反向 −1 后取平均；对角线（自己和自己）留空", fontsize=10, color=INK2)
+cb.set_label("Direction agreement (−1 to +1)", color=INK2)
+fig.text(0.04, 0.95, "20 Tech Stocks: Direction Agreement (3D Surface)", fontsize=17, color=INK, weight="bold")
+fig.text(0.04, 0.92, f"{rng}; +1 same direction, −1 opposite, averaged; diagonal (a stock with itself) left blank", fontsize=10, color=INK2)
 fig.text(0.04, 0.02, FOOT, fontsize=8, color=MUTED)
 fig.savefig(FIG / "tech20_direction_agreement_surface.png", facecolor=SURF)
 plt.close(fig)
