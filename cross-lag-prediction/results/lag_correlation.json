@@ -1,0 +1,72 @@
+{
+  "n_stocks": 63,
+  "n_days": 2972,
+  "start": "2015-01-05",
+  "end": "2026-10-28",
+  "mean_abs_C0_offdiag": 0.410941861959556,
+  "mean_C0_offdiag": 0.410941861959556,
+  "mean_abs_C1_offdiag": 0.046881120808661365,
+  "mean_C1_offdiag": -0.045212011637242026,
+  "max_abs_C1_offdiag": 0.1669424436280302,
+  "iid_se_of_corr": 0.01834630774138222,
+  "frac_sig_offdiag": 0.39631336405529954,
+  "perm_frac_mean": 0.048174603174603176,
+  "perm_frac_95": 0.10222734254992313,
+  "perm_p_frac": 0.0,
+  "max_abs_t": 5.1504679451563895,
+  "perm_max_t_95": 4.097840891264026,
+  "n_pairs_beat_perm_max95": 31,
+  "bh_fdr5_offdiag": 892,
+  "by_lag": {
+    "1": {
+      "frac_sig_offdiag": 0.39631336405529954,
+      "mean_corr_offdiag": -0.045212011637242026,
+      "mean_own_corr": -0.04961809033369777
+    },
+    "2": {
+      "frac_sig_offdiag": 0.07885304659498207,
+      "mean_corr_offdiag": 0.02424448972072715,
+      "mean_own_corr": 0.02073318339523812
+    },
+    "3": {
+      "frac_sig_offdiag": 0.02124935995903738,
+      "mean_corr_offdiag": -0.008962637769322039,
+      "mean_own_corr": -0.01134283851864941
+    },
+    "4": {
+      "frac_sig_offdiag": 0.05657962109575013,
+      "mean_corr_offdiag": -0.019114603923828032,
+      "mean_own_corr": -0.027726496063013802
+    },
+    "5": {
+      "frac_sig_offdiag": 0.030209933435739886,
+      "mean_corr_offdiag": 0.009738136574954473,
+      "mean_own_corr": 0.005904634010866964
+    }
+  },
+  "stability_pearson": 0.27168554292408253,
+  "stability_pearson_p": 4.63981358927419e-67,
+  "stability_demeaned_spearman": 0.26890626856044997,
+  "leader_score_spearman": -0.02136136712749616,
+  "leader_score_p": 0.868019811399171,
+  "own_lag_frac_sig": 0.3492063492063492,
+  "own_lag_mean_corr": -0.04961809033369777,
+  "mkt_lag_frac_sig": 0.6190476190476191,
+  "mkt_lag_mean_t": -2.237020585050799,
+  "mkt_lag_pooled_nw_t": -2.0327447911936476,
+  "no_covid": {
+    "mean_C1_offdiag": -0.015637789448765066,
+    "frac_sig_offdiag": 0.13338453661034305,
+    "perm_frac_95": 0.0996031746031746,
+    "mkt_lag_pooled_nw_t": -1.4191790264842732
+  },
+  "idiosyncratic": {
+    "mean_C1_offdiag": -0.000846655953018317,
+    "frac_sig_offdiag": 0.05811571940604199,
+    "perm_frac_95": 0.058627752176139275,
+    "perm_p": 0.065,
+    "stability_pearson": -0.017850450639493507,
+    "stability_demeaned_spearman": -0.022594238575200765
+  },
+  "idio_max_abs_C1": 0.11561052069264549
+}

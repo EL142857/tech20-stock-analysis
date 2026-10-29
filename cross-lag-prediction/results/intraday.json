@@ -1,0 +1,53 @@
+{
+  "correlation": {
+    "n_stocks": 63,
+    "n_days": 717,
+    "start": "2023-12-11",
+    "end": "2026-10-28",
+    "mean_corr_afternoon_same_time": 0.46933454703850025,
+    "mean_corr_afternoon_vs_morning": -0.003367815708089821,
+    "max_abs_corr_afternoon_vs_morning": 0.17830550168290674,
+    "noise_se": 0.03734568434866355,
+    "frac_sig_offdiag": 0.023809523809523808,
+    "perm_frac_95": 0.09216589861751152,
+    "perm_p": 0.944,
+    "bh_fdr5": 0,
+    "own_morning_frac_sig": 0.06349206349206349,
+    "own_morning_mean_corr": -0.02292823877462001,
+    "stability_halves": 0.04518477062774282,
+    "idio_mean_corr": -0.004119001385760585,
+    "idio_frac_sig": 0.04505888376856119,
+    "idio_perm_frac_95": 0.06144393241167435,
+    "idio_stability_halves": 0.005786534126006878,
+    "qqq_morning_vs_afternoon_corr": 0.01701045160106711,
+    "qqq_morning_vs_afternoon_nw_t": 0.3052694489995226,
+    "qqq_morning_vs_afternoon_corr_ex_apr2025": -0.017036403706338573,
+    "qqq_morning_to_each_afternoon_frac_sig": 0.0,
+    "qqq_morning_to_each_afternoon_mean_t": 0.24538174922374212,
+    "qqq_overnight_first_hour_vs_last_half_corr": -0.004126215667417927,
+    "qqq_overnight_first_hour_vs_last_half_nw_t": -0.08268893691871668,
+    "own_overnight_first_hour_vs_last_half_mean_t": -0.27631864537835776,
+    "own_overnight_first_hour_vs_last_half_frac_sig": 0.031746031746031744
+  },
+  "walk_forward_oos_days": 467,
+  "walk_forward_oos_start": "2024-12-11",
+  "share_up_afternoons_pct": 50.17164610312362,
+  "qqq_timing": {
+    "morning_sign->afternoon": {
+      "sharpe_gross": 0.3743515301681681,
+      "sharpe_net_1bp": -0.08417578462597733,
+      "gross_bp_per_day": 1.6328428780136326,
+      "hit_rate_pct": 51.88284518828452,
+      "nw_t_gross": 0.6028554562048599,
+      "sharpe_gross_ex_apr2025": -0.028847863798102703
+    },
+    "overnight+first_hour_sign->last_half_hour": {
+      "sharpe_gross": -0.2820763259554555,
+      "sharpe_net_1bp": -1.4631973194424088,
+      "gross_bp_per_day": -0.47764171073227374,
+      "hit_rate_pct": 48.39609483960948,
+      "nw_t_gross": -0.43515445401050884,
+      "sharpe_gross_ex_apr2025": -0.024258535995987273
+    }
+  }
+}

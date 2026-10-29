@@ -1,0 +1,8 @@
+{
+  "oos_start": "2018-01-11",
+  "oos_end": "2026-10-28",
+  "oos_days": 2211,
+  "share_up_days_pct": 52.65806609090191,
+  "ridge_L5_median_alpha_over_n": 1000.0,
+  "ridge_L5_share_max_alpha": 0.4281221922731357
+}

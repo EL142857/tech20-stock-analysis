@@ -21,6 +21,8 @@ results/     computed tables (CSV)
 figures/     all charts
 transcript/  the conversation that produced this repo
 run_all.py   regenerate everything
+
+cross-lag-prediction/  follow-up project with its own README, scripts and data (see below)
 ```
 
 ## Running
@@ -107,3 +109,18 @@ The spring is driven by each stock's own weekly % change (÷ its own volatility)
 ## Conclusion
 
 For these 20 large-cap tech stocks on weekly data, "spring energy" has essentially no predictive power for next week's direction or size, whether or not the market is removed and whatever the memory length. The few single-stock pull-back signals (NVDA relative to the market, AVGO on its own) would need longer data to confirm.
+
+## Follow-up: can earlier moves predict the next one? · [`cross-lag-prediction/`](cross-lag-prediction/README.md)
+
+A separate, self-contained project on 63 US tech stocks plus QQQ. It tests whether each stock's next % change can be predicted from the recent % changes of *all* the stocks (a regression on a lagged cross-stock matrix), at three horizons:
+
+| horizon | data | result |
+|---|---|---|
+| yesterday → today | daily, 2015–2026 | No stock-to-stock signal. The only effect is a market-wide reversal after extreme days, mostly in 2020. The full regression has 14% in-sample R² but −11% out of sample. |
+| morning → afternoon | hourly, 2023–2026 | The correlation matrix looks like noise, and every forecast loses to "flat". |
+| last minutes → next minute | 1-minute, Oct 2026 | Statistically clear but tiny signal (best model: pooled ridge). It comes from bid-ask bounce and stale prices and is smaller than trading costs. |
+
+```bash
+cd cross-lag-prediction
+python run_all.py
+```
